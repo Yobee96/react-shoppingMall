@@ -8,9 +8,10 @@ import data from './data.js';
 import Detail from "./Detail";
 // react_router_dom 라이브러리 사용법
 import {Routes, Route, Link} from 'react-router-dom';
+import axios from 'axios'
 
 function App() {
-    const [shoes] = useState(data);
+    const [shoes,setShoes] = useState(data);
 
     return (
         <div className="App">
@@ -40,12 +41,23 @@ function App() {
                                     const index = i+1;
                                     const imgUrl = 'https://codingapple1.github.io/shop/shoes'+index+'.jpg';
                                     return (
-                                        <Product key={shose.id} imgUrl={imgUrl} shose={shose}/>
+                                        <Product imgUrl={imgUrl} shose={shose}/>
                                     )
                                 })
                             }
                         </div>
                     </div>
+
+                    <button onClick={()=>{
+                        axios.get('https://codingapple1.github.io/shop/data2.json')
+                        .then((data)=>{
+                            const newArr =[
+                                ...shoes,
+                                ...data.data
+                            ];
+                            setShoes(newArr);
+                        })
+                    }}>더보기</button>
                 </>
                 } />
                 <Route path="/detail/:id" element={<Detail shoes={shoes} />} />
