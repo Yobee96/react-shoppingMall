@@ -40,7 +40,7 @@ function App() {
                                     const index = i+1;
                                     const imgUrl = 'https://codingapple1.github.io/shop/shoes'+index+'.jpg';
                                     return (
-                                        <Product imgUrl={imgUrl} shose={shose}/>
+                                        <Product key={shose.id} imgUrl={imgUrl} shose={shose}/>
                                     )
                                 })
                             }
