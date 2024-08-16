@@ -8,7 +8,7 @@ import data from './data.js';
 import Detail from "./routes/Detail";
 import {Routes, Route, Link} from 'react-router-dom';
 import axios from 'axios'
-
+import Cart from "./routes/Cart";
 // useState 가 다른 컴포넌트에서 사용 하기 불편할 때, 부모자식 관계로 사용
 /* 복잡성 해결 
 * 방법 1 : Context API : 성능이슈로많이쓰진 않음, 재활용이 어려움
@@ -78,6 +78,8 @@ function App() {
                         <Detail shoes={shoes} />
                     </Context1.Provider>
                 } />
+                {/*장바구니*/}
+                <Route path="/cart" element={<Cart />}/>
             </Routes>
 
         </div>
