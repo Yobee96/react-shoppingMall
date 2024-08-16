@@ -1,10 +1,15 @@
 /* eslint-disable */
 import {useParams} from "react-router-dom";
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import {Nav} from 'react-bootstrap';
+
+import {Context1} from './../App.js'
+
 
 function Detail(props) {
 
+    const {stock, shoes} = useContext(Context1)
+    
     const [alert, setAlert] = useState(true);
     const [count, setCount] = useState(0);
     const [onlyNumber, setOnlyNumber] = useState(false);
@@ -31,7 +36,7 @@ function Detail(props) {
 
 
     let {id} = useParams();
-    const product =  props.shoes.find(item => item.id === parseInt(id));
+    const product =  shoes.find(item => item.id === parseInt(id));
     const imgUrl = 'https://codingapple1.github.io/shop/shoes'+ (parseInt(id)+1) +'.jpg';
     return (
         <div className={'container start '+fade2}>
@@ -41,7 +46,7 @@ function Detail(props) {
                 </div> :
                 null
             }
-
+            {stock[0]}
             <div className="row satart end">
                 <div className="col-md-6">
                     <img src={imgUrl} width="100%" alt="prdtImg"/>
@@ -67,7 +72,7 @@ function Detail(props) {
                 </Nav.Item>
             </Nav>
 
-            <TabContent tab={tab}/>
+            <TabContent tab={tab}  />
 
         </div>
     )
@@ -75,8 +80,6 @@ function Detail(props) {
 
 function TabContent ({tab}) {
     const [fade, setFade] = useState('')
-    // 리액트 18버전 이후부터는 useState 변경함수가 근처에 있으면 마지막 랜더링만 실행됨
-    // 오토매틱 배치 : 따라서 시간을 좀두고 사용하거나 거리를 멀리해야함
     useEffect(() => {
         let a = setTimeout(()=>{setFade('end');}, 100);
         return ()=>{
