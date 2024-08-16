@@ -8,10 +8,9 @@ function Detail(props) {
     const [alert, setAlert] = useState(true);
     const [count, setCount] = useState(0);
     const [onlyNumber, setOnlyNumber] = useState(false);
+    const [fade2, setFade2] = useState('');
 
     const [tab, setTab] = useState(0);
-
-
 
     useEffect(() => {
         let timer = setTimeout(()=>{
@@ -19,18 +18,23 @@ function Detail(props) {
         },2000);
 
         return()=>{
-            console.log(1);
-            /*기존 타이머를 제거*/
             clearTimeout(timer);
         }
     });
+
+    useEffect(() => {
+        setFade2('end')
+        return ()=>{
+            setFade2('')
+        }
+    }, []);
 
 
     let {id} = useParams();
     const product =  props.shoes.find(item => item.id === parseInt(id));
     const imgUrl = 'https://codingapple1.github.io/shop/shoes'+ (parseInt(id)+1) +'.jpg';
     return (
-        <div className="container">
+        <div className={'container start '+fade2}>
             {alert?
                 <div className="alert alert-warning">
                     2초 이내 구매시 할인
@@ -38,7 +42,7 @@ function Detail(props) {
                 null
             }
 
-            <div className="row">
+            <div className="row satart end">
                 <div className="col-md-6">
                     <img src={imgUrl} width="100%" alt="prdtImg"/>
                 </div>
@@ -64,19 +68,27 @@ function Detail(props) {
             </Nav>
 
             <TabContent tab={tab}/>
-            {/*
-            tab === 0 ? <div>내용0</div> :
-            tab === 1 ? <div>내용1</div> :
-            tab === 2 ? <div>내용2</div> : null
-            */}
 
         </div>
     )
 }
 
 function TabContent ({tab}) {
-    return [<div>내용0</div>, <div>내용1</div>, <div>내용2</div>][tab]
-}
+    const [fade, setFade] = useState('')
+    // 리액트 18버전 이후부터는 useState 변경함수가 근처에 있으면 마지막 랜더링만 실행됨
+    // 오토매틱 배치 : 따라서 시간을 좀두고 사용하거나 거리를 멀리해야함
+    useEffect(() => {
+        let a = setTimeout(()=>{setFade('end');}, 100);
+        return ()=>{
+            clearTimeout(a);
+            setFade('');
+        }
+    }, [tab]);
 
+    return (
+        <div className={`start ${fade}`}>
+            {[<div>내용0</div>, <div>내용1</div>, <div>내용2</div>][tab]}
+        </div>
+)}
 
 export default Detail;
