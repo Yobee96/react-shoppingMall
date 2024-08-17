@@ -1,17 +1,23 @@
 import {Table} from "react-bootstrap";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {changeName} from "../store";
 
 function Cart(){
 
-    /*Redux 사용방법 
-    * 1. state를 저장한 곳에서 configureStore 안에 createSlice 객체 담기
-    * 2. 사용처에서, useSelector 로 값 가져오기, 이때 ((state)=>{return state}) 의 state는 선언한 모든 객체
-    * 3. 일부를 가져오고 싶다면 state.xxx 으로 가져오기
+    /*Redux 수정방법
+    1. state 수정하는 ㅅ함수만들 고, 
+    2. 원할 때 그 함수 실행해 달라고 store.js 에 요청
     * */
     let cartItems = useSelector((state)=>{return state.cartItems})
+    let state = useSelector((state)=>{return state})
+
+    // store.js 에 변경요청을 보내는 함수
+    let dispatch = useDispatch()
 
     return (
         <div>
+            {state.user.name} 의 장바구니
+            <button style={{margin : '2px'}} onClick={()=>{dispatch(changeName())}}>state 변경</button>
             <Table striped bordered hover>
                 <thead>
                 <tr>
@@ -25,15 +31,14 @@ function Cart(){
 
                 {
                     cartItems.map((item, i)=>{
-
-                        console.log(item);
-
                         return(
-                            <tr>
+                            <tr key={i}>
                                 <td>{i+1}</td>
                                 <td>{item.name}</td>
                                 <td>{item.count} 개</td>
-                                <td>응?</td>
+                                <td><button onClick={()=>{
+                                    dispatch(changeName())
+                                }}>+</button></td>
                             </tr>
                     )})
                 }

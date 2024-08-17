@@ -31,6 +31,7 @@ function App() {
                     <Nav className="me-auto">
                         <Link to="/" style={{margin:'3px'}}>홈으로 이동</Link>
                         <Link to="/detail" style={{margin:'3px'}}>디테일로 이동</Link>
+                        <Link to="/Cart" style={{margin:'3px'}}>카트로 이동</Link>
                         <Nav.Link href="#pricing">Pricing</Nav.Link>
                     </Nav>
                 </Container>
