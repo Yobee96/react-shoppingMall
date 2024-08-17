@@ -2,9 +2,9 @@
 import {useParams} from "react-router-dom";
 import {useContext, useEffect, useState} from "react";
 import {Nav} from 'react-bootstrap';
-
 import {Context1} from './../App.js'
-
+import {useDispatch, useSelector} from "react-redux";
+import { addProduct } from '../store/cartSlice.js'
 
 function Detail(props) {
 
@@ -14,8 +14,10 @@ function Detail(props) {
     const [count, setCount] = useState(0);
     const [onlyNumber, setOnlyNumber] = useState(false);
     const [fade2, setFade2] = useState('');
-
     const [tab, setTab] = useState(0);
+
+    let cart = useSelector((state)=>{return state.cart})
+    const dispatch = useDispatch()
 
     useEffect(() => {
         let timer = setTimeout(()=>{
@@ -46,7 +48,6 @@ function Detail(props) {
                 </div> :
                 null
             }
-            {stock[0]}
             <div className="row satart end">
                 <div className="col-md-6">
                     <img src={imgUrl} width="100%" alt="prdtImg"/>
@@ -56,7 +57,10 @@ function Detail(props) {
                     <h4 className="pt-5">{product.title}</h4>
                     <p>{product.content}</p>
                     <p>{product.price}원</p>
-                    <button className="btn btn-danger">주문하기</button>
+                    <button className="btn btn-danger" onClick={()=>{
+                    const addProductObj = {id : product.id, name : product.title, count: 1}
+                    dispatch(addProduct(addProductObj))
+                    }}>주문하기</button>
                 </div>
             </div>
 
