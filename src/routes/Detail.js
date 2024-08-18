@@ -21,6 +21,7 @@ function Detail(props) {
 
     let navigate = useNavigate();
 
+
     useEffect(() => {
         let timer = setTimeout(()=>{
             setAlert(false);
@@ -42,6 +43,12 @@ function Detail(props) {
     let {id} = useParams();
     const product =  shoes.find(item => item.id === parseInt(id));
     const imgUrl = 'https://codingapple1.github.io/shop/shoes'+ (parseInt(id)+1) +'.jpg';
+
+
+    useEffect(() => {
+        localStorage.setItem('watched', getWatched(product.id))
+    }, []);
+
     return (
         <div className={'container start '+fade2}>
             {alert?
@@ -99,5 +106,16 @@ function TabContent ({tab}) {
             {[<div>내용0</div>, <div>내용1</div>, <div>내용2</div>][tab]}
         </div>
 )}
+
+
+function getWatched(id) {
+    let warchedArr = JSON.parse(localStorage.getItem('watched'))
+    /*if (!warchedArr.includes(id))
+        warchedArr.push(id)*/
+    warchedArr.push(id)
+    warchedArr = new Set(warchedArr)
+    warchedArr = Array.from(warchedArr)
+    return JSON.stringify(warchedArr)
+}
 
 export default Detail;

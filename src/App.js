@@ -30,7 +30,9 @@ function App() {
 
     // 숙제
     useEffect(() => {
-        localStorage.setItem('watced', JSON.stringify([]))
+        let watchedArr = localStorage.getItem('watched')
+        if (JSON.parse(watchedArr) === null)
+            localStorage.setItem('watched', JSON.stringify([]))
     }, []);
 
     let navigate = useNavigate();
@@ -108,7 +110,6 @@ function App() {
 function Product (props) {
     return(
         <div className="col-md-4" onClick={()=>{
-            localStorage.setItem('watced', getWatched(props.shose.id))
             props.navigate(`/detail/${props.shose.id}`)
         }}>
             <img src={props.imgUrl} width="80%" alt="shoseImg"/>
@@ -118,13 +119,6 @@ function Product (props) {
     )
 }
 
-function getWatched(id) {
-    let warchedArr = JSON.parse(localStorage.getItem('watced'))
-    if (!warchedArr.includes(id))
-        warchedArr.push(id)
-
-    return JSON.stringify(warchedArr)
-}
 
 function About() {
     return(
