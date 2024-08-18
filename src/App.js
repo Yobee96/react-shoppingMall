@@ -3,17 +3,12 @@ import './App.css';
 
 import { Container, Nav, Navbar } from 'react-bootstrap';
 import bg from './img/bg.jfif';
-import {createContext, useState} from "react";
+import {createContext, useEffect, useState} from "react";
 import data from './data.js';
 import Detail from "./routes/Detail";
-import {Routes, Route, Link} from 'react-router-dom';
+import {Routes, Route, Link, useNavigate, Outlet} from 'react-router-dom';
 import axios from 'axios'
 import Cart from "./routes/Cart";
-// useState 가 다른 컴포넌트에서 사용 하기 불편할 때, 부모자식 관계로 사용
-/* 복잡성 해결 
-* 방법 1 : Context API : 성능이슈로많이쓰진 않음, 재활용이 어려움
-* 방법 2 : Redux 등 외부라이브러리 사용
-* */
 
 export let Context1 = createContext()
 
@@ -22,17 +17,34 @@ function App() {
     const [reqUrlNum, setReqUrlNum] = useState(2);
     const [stock, setStock] = useState([10, 11, 12]);
 
+    // logcalStorage : 웹에 5mb 문자자료 저장 가능 localStorage.setItem('key', 'value')
+    /* 사용법 */
+    /*let obj = {name : 'kim'}
+    localStorage.setItem('data', JSON.stringify(obj))
+    // 이런식으로 JSON.stringify 사용 하면 obj도 저장가능
+
+    // 떠내서쓸땐 JSON.parse
+    let getObj = localStorage.getItem('data')
+    console.log(JSON.parse(getObj).name)*/
+
+
+    // 숙제
+    useEffect(() => {
+        localStorage.setItem('watced', JSON.stringify([]))
+    }, []);
+
+    let navigate = useNavigate();
+
     return (
         <div className="App">
-
             <Navbar bg="dark" data-bs-theme="dark">
                 <Container>
-                    <Navbar.Brand href="#home">Navbar</Navbar.Brand>
+                    <Navbar.Brand href="/">Navbar</Navbar.Brand>
                     <Nav className="me-auto">
-                        <Link to="/" style={{margin:'3px'}}>홈으로 이동</Link>
-                        <Link to="/detail" style={{margin:'3px'}}>디테일로 이동</Link>
-                        <Link to="/Cart" style={{margin:'3px'}}>카트로 이동</Link>
-                        <Nav.Link href="#pricing">Pricing</Nav.Link>
+                        <Nav.Link onClick={()=>{ navigate('/') }} style={{margin:'3px'}}>Home</Nav.Link>
+                        <Nav.Link onClick={()=>{ navigate('/detail/0') }} style={{margin:'3px'}}>Detail</Nav.Link>
+                        <Nav.Link onClick={()=>{ navigate('/Cart') }} style={{margin:'3px'}}>Cart</Nav.Link>
+                        <Nav.Link onClick={()=>{ navigate('/About') }} style={{margin:'3px'}}>About</Nav.Link>
                     </Nav>
                 </Container>
             </Navbar>
@@ -49,7 +61,7 @@ function App() {
                                     const index = i+1;
                                     const imgUrl = 'https://codingapple1.github.io/shop/shoes'+index+'.jpg';
                                     return (
-                                        <Product key={i} imgUrl={imgUrl} shose={shose}/>
+                                        <Product key={i} imgUrl={imgUrl} shose={shose} navigate={navigate}/>
                                     )
                                 })
                             }
@@ -81,6 +93,12 @@ function App() {
                 } />
                 {/*장바구니*/}
                 <Route path="/cart" element={<Cart />}/>
+
+                <Route path="/about" element={<About />} >
+                    <Route path="member" element={<div>맴버임</div>} />
+                    <Route path="location" element={<div>로컬임</div>} />
+                </Route>
+                <Route path="*" element={<h4>없는 페이지</h4>}/>
             </Routes>
 
         </div>
@@ -89,11 +107,31 @@ function App() {
 
 function Product (props) {
     return(
-        <div className="col-md-4" onClick={()=>{}}>
+        <div className="col-md-4" onClick={()=>{
+            localStorage.setItem('watced', getWatched(props.shose.id))
+            props.navigate(`/detail/${props.shose.id}`)
+        }}>
             <img src={props.imgUrl} width="80%" alt="shoseImg"/>
             <h4>{props.shose.title}</h4>
             <p>{props.shose.content}</p>
         </div>
+    )
+}
+
+function getWatched(id) {
+    let warchedArr = JSON.parse(localStorage.getItem('watced'))
+    if (!warchedArr.includes(id))
+        warchedArr.push(id)
+
+    return JSON.stringify(warchedArr)
+}
+
+function About() {
+    return(
+        <>
+            <div>회사정보 페이지임</div>
+            <Outlet></Outlet>
+        </>
     )
 }
 

@@ -1,5 +1,5 @@
 /* eslint-disable */
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {useContext, useEffect, useState} from "react";
 import {Nav} from 'react-bootstrap';
 import {Context1} from './../App.js'
@@ -18,6 +18,8 @@ function Detail(props) {
 
     let cart = useSelector((state)=>{return state.cart})
     const dispatch = useDispatch()
+
+    let navigate = useNavigate();
 
     useEffect(() => {
         let timer = setTimeout(()=>{
@@ -60,6 +62,7 @@ function Detail(props) {
                     <button className="btn btn-danger" onClick={()=>{
                     const addProductObj = {id : product.id, name : product.title, count: 1}
                     dispatch(addProduct(addProductObj))
+                    navigate('/Cart')
                     }}>주문하기</button>
                 </div>
             </div>
@@ -76,8 +79,7 @@ function Detail(props) {
                 </Nav.Item>
             </Nav>
 
-            <TabContent tab={tab}  />
-
+            <TabContent tab={tab}  />주문하기
         </div>
     )
 }
