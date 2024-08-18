@@ -9,6 +9,7 @@ import Detail from "./routes/Detail";
 import {Routes, Route, Link, useNavigate, Outlet} from 'react-router-dom';
 import axios from 'axios'
 import Cart from "./routes/Cart";
+import {useQuery} from "react-query";
 
 export let Context1 = createContext()
 
@@ -17,18 +18,6 @@ function App() {
     const [reqUrlNum, setReqUrlNum] = useState(2);
     const [stock, setStock] = useState([10, 11, 12]);
 
-    // logcalStorage : 웹에 5mb 문자자료 저장 가능 localStorage.setItem('key', 'value')
-    /* 사용법 */
-    /*let obj = {name : 'kim'}
-    localStorage.setItem('data', JSON.stringify(obj))
-    // 이런식으로 JSON.stringify 사용 하면 obj도 저장가능
-
-    // 떠내서쓸땐 JSON.parse
-    let getObj = localStorage.getItem('data')
-    console.log(JSON.parse(getObj).name)*/
-
-
-    // 숙제
     useEffect(() => {
         let watchedArr = localStorage.getItem('watched')
         if (JSON.parse(watchedArr) === null)
@@ -36,6 +25,23 @@ function App() {
     }, []);
 
     let navigate = useNavigate();
+
+    
+    // refetch 를 사용하는법 은 useQuery 사용하면 된다.
+    let result = useQuery('작명', ()=>{
+        return axios.get('https://codingapple1.github.io/userdata.json').then((response)=>{
+            return response.data
+        })
+    }, {staleTime : 2000})
+    /* useQuery 의 사용법 
+    * 1. result.data : 가져 오는 데이터
+    * 2. result.isLoading : 현재 로딩중 인지 확인
+    * 3. result.error : 요청 실패시 true 리턴
+    * refetch의 간격을 주고 싶으면 마지막에 options를 통해 staleTime 로 최소 시간 설정 가능
+    * 만일 가져오는걸 실패해도, 계속 다시 리트라이 해줌
+    * 만일 똑같은곳에서 두번호출돼도, 한번만 사용됨
+    * 캐싱기능 성공결과를 기억해둠
+    * */
 
     return (
         <div className="App">
@@ -47,6 +53,10 @@ function App() {
                         <Nav.Link onClick={()=>{ navigate('/detail/0') }} style={{margin:'3px'}}>Detail</Nav.Link>
                         <Nav.Link onClick={()=>{ navigate('/Cart') }} style={{margin:'3px'}}>Cart</Nav.Link>
                         <Nav.Link onClick={()=>{ navigate('/About') }} style={{margin:'3px'}}>About</Nav.Link>
+                    </Nav>
+                    {/* useQuery 사용 */}
+                    <Nav className="ms-auto text-white">
+                        { result.isLoading ? '로딩중' : '안녕하세요 '+result.data.name+'님' }
                     </Nav>
                 </Container>
             </Navbar>
