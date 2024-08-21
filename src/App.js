@@ -33,15 +33,6 @@ function App() {
             return response.data
         })
     }, {staleTime : 2000})
-    /* useQuery 의 사용법 
-    * 1. result.data : 가져 오는 데이터
-    * 2. result.isLoading : 현재 로딩중 인지 확인
-    * 3. result.error : 요청 실패시 true 리턴
-    * refetch의 간격을 주고 싶으면 마지막에 options를 통해 staleTime 로 최소 시간 설정 가능
-    * 만일 가져오는걸 실패해도, 계속 다시 리트라이 해줌
-    * 만일 똑같은곳에서 두번호출돼도, 한번만 사용됨
-    * 캐싱기능 성공결과를 기억해둠
-    * */
 
     return (
         <div className="App">

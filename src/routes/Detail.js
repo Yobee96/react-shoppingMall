@@ -110,8 +110,6 @@ function TabContent ({tab}) {
 
 function getWatched(id) {
     let warchedArr = JSON.parse(localStorage.getItem('watched'))
-    /*if (!warchedArr.includes(id))
-        warchedArr.push(id)*/
     warchedArr.push(id)
     warchedArr = new Set(warchedArr)
     warchedArr = Array.from(warchedArr)
