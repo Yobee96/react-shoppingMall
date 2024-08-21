@@ -3,7 +3,7 @@ import './App.css';
 
 import { Container, Nav, Navbar } from 'react-bootstrap';
 import bg from './img/bg.jfif';
-import {createContext, useEffect, useState} from "react";
+import {createContext, useDeferredValue, useEffect, useState, useTransition} from "react";
 import data from './data.js';
 import Detail from "./routes/Detail";
 import {Routes, Route, Link, useNavigate, Outlet} from 'react-router-dom';
@@ -12,6 +12,16 @@ import Cart from "./routes/Cart";
 import {useQuery} from "react-query";
 
 export let Context1 = createContext()
+
+
+/* react 팁
+* 1. state 변경함수들이 붙어있으면, 재런더링은 마지막 state변경에서 일어남
+*   (setTimOut이나, ajax 통신등으로 다시 재런더링 시킬 순 있음)
+* 2.  useTransitiom
+* */
+
+let arr = new Array(100).fill(0)
+
 
 function App() {
     const [shoes,setShoes] = useState(data);
@@ -26,16 +36,35 @@ function App() {
 
     let navigate = useNavigate();
 
-    
-    // refetch 를 사용하는법 은 useQuery 사용하면 된다.
     let result = useQuery('작명', ()=>{
         return axios.get('https://codingapple1.github.io/userdata.json').then((response)=>{
             return response.data
         })
     }, {staleTime : 2000})
 
+
+
+    let [name, setName] = useState('Kim')
+    let[isPending, startTransition] = useTransition()
+    let useDefValName = useDeferredValue(name)
+
     return (
         <div className="App">
+            <input onChange={(e)=>{
+                /*기존애는 인풋의 값을 읽고 div 만개 만들기 작업이었다면,
+                * startTransition 는  인풋값 읽기를 하되, 좀늦게 만개 보여주기로 성능향상 효과 표현,
+                * */
+                startTransition(()=>{
+                    setName(e.target.value)
+                })
+            }} />
+
+            {
+                isPending ? '로딩중' :
+                    arr.map(()=>{
+                        return <div>{useDefValName}</div>
+                    })
+            }
             <Navbar bg="dark" data-bs-theme="dark">
                 <Container>
                     <Navbar.Brand href="/">Navbar</Navbar.Brand>

@@ -2,37 +2,15 @@ import {Table} from "react-bootstrap";
 import {useDispatch, useSelector} from "react-redux";
 import { changeName, changeAge } from '../store/userSlice.js'
 import { addCount, subCount, removeProduct } from '../store/cartSlice.js'
-import {memo, useMemo, useState} from "react";
-
-
-/* 재 렌더링 막기 컴포넌트 만들때 memo 사용 */
-let Child = memo( function () {
-    console.log('재렌더링 됨')
-    return <div>자식임</div>
-})
-/*매모의 원리
-* props가 변할 때만 재 렌더링 되는 기능
-* */
-
-function 함수() {
-    return '반복문 수억번 돌린 결과'
-}
 
 function Cart(){
-
-    /*useMemo*/
-    const result = useMemo(() => {return 함수()}, []);
 
     let state = useSelector((state)=>{return state})
     let dispatch = useDispatch()
 
-    const [count, setCount] = useState(0)
-
     return (
         <div>
 
-            <Child count={count}></Child>
-            <button onClick={()=>{setCount(count+1)}}>버튼</button>
             {state.user.name} 의 장바구니 ( {state.user.age} )
             <button style={{margin : '2px'}} onClick={()=>{dispatch(changeName())}}>state 이름변경</button>
 
