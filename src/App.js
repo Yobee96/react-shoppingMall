@@ -48,8 +48,25 @@ function App() {
     let[isPending, startTransition] = useTransition()
     let useDefValName = useDeferredValue(name)
 
+    let [count, setCount] = useState(0);
+    const [age, setAge] = useState(20);
+
+    // onClick 다음에 바로 설정하면 if 문은 비동기통신이라 작동을 안함
+    useEffect(() => {
+        //따라서 useEffect 를 사용해서 처리함
+        if (count != 0 && count < 3) {
+            setAge(age+1);
+        }
+    }, [count]);
+
     return (
         <div className="App">
+            <div> 안녕하십니까 전 {age}</div>
+            <button onClick={(e)=>{
+                setCount(count+1);
+            }}>누르면 한살 먹기</button>
+            <br/>
+
             <input onChange={(e)=>{
                 /*기존애는 인풋의 값을 읽고 div 만개 만들기 작업이었다면,
                 * startTransition 는  인풋값 읽기를 하되, 좀늦게 만개 보여주기로 성능향상 효과 표현,
