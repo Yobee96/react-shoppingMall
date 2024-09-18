@@ -5,6 +5,8 @@ import {Nav} from 'react-bootstrap';
 import {Context1} from './../App.js'
 import {useDispatch, useSelector} from "react-redux";
 import { addProduct } from '../store/cartSlice.js'
+import {useLike, useName, useUserName} from "../hooks/like";
+import axios from "axios";
 
 function Detail(props) {
 
@@ -47,10 +49,16 @@ function Detail(props) {
 
     useEffect(() => {
         localStorage.setItem('watched', getWatched(product.id))
-    }, []);
+    }, [])
+
+    /*함수를 가져오기 때문에 함수내 지역변수는 사용할 수 없음*/
+    let [like, addLike] = useLike()
+
+    let userName = useUserName()
 
     return (
         <div className={'container start '+fade2}>
+
             {alert?
                 <div className="alert alert-warning">
                     2초 이내 구매시 할인
@@ -60,6 +68,9 @@ function Detail(props) {
             <div className="row satart end">
                 <div className="col-md-6">
                     <img src={imgUrl} width="100%" alt="prdtImg"/>
+                    {like} <span onClick={()=>{ addLike() }}>❤</span>
+
+                    {userName}
                 </div>
 
                 <div className="col-md-6">
